@@ -7,6 +7,41 @@ import { deduplicateById } from '../utils/deduplicate';
 const LOCAL_STORAGE_KEY = 'delicias_belgi_productos';
 const DELETED_PRODUCTS_KEY = 'delicias_belgi_deleted_products';
 
+// Legacy mock identifiers to ensure zero mock data appears
+const LEGACY_MOCK_IDS = new Set([
+  'prod-1', 'prod-2', 'prod-3', 'prod-4', 'prod-5', 'prod-6', 'prod-7', 'prod-8'
+]);
+const LEGACY_MOCK_TITLES = new Set([
+  'Boli Artesanal de Chocolate Suizo',
+  'Boli Tropical de Mango y Maracuyá',
+  'Cheesecake New York con Frutos Rojos',
+  'Tarta Húmeda de Tres Leches Belgi',
+  'Caja de Alfajores Artesanales (6 uds)',
+  'Brownie Fudge con Nuez y Helado',
+  'Tarta de Chocolate Belga 70%',
+  'Paleta Artesanal de Pistacho & Frambuesa',
+]);
+
+function isMockProduct(id?: string, nombre?: string): boolean {
+  if (!id) return false;
+  if (LEGACY_MOCK_IDS.has(id)) return true;
+  if (id.startsWith('init-')) return true;
+  if (nombre && LEGACY_MOCK_TITLES.has(nombre.trim())) return true;
+  return false;
+}
+
+// Self-clean any legacy mock products from localStorage on load
+try {
+  const existingRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (existingRaw) {
+    const parsed: any[] = JSON.parse(existingRaw);
+    const cleaned = parsed.filter((p: any) => !isMockProduct(p.id, p.nombre));
+    if (cleaned.length !== parsed.length) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cleaned));
+    }
+  }
+} catch (_) {}
+
 function getDeletedProductIds(): Set<string> {
   try {
     const raw = localStorage.getItem(DELETED_PRODUCTS_KEY);
@@ -33,12 +68,13 @@ function normalizeProducto(id: string, data: any): Producto {
     nombre: data.nombre || data.name || 'Producto',
     descripcion: data.descripcion || data.description || '',
     precio: Number(data.precio || data.price || 0),
-    categoria: data.categoria || data.category || 'Helados',
+    costo: data.costo !== undefined ? Number(data.costo) : 0,
+    categoria: data.categoria || data.category || 'Helados & Bolis',
     imagen: data.imagen || data.image || 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&q=80&w=800',
     disponible: isDisp,
     activo: isDisp,
-    stock: data.stock !== undefined ? Number(data.stock) : 99,
-    stockMinimo: data.stockMinimo !== undefined ? Number(data.stockMinimo) : 5,
+    stock: data.stock !== undefined ? Number(data.stock) : 0,
+    stockMinimo: data.stockMinimo !== undefined ? Number(data.stockMinimo) : 0,
     createdAt: data.createdAt || new Date().toISOString(),
     updatedAt: data.updatedAt || new Date().toISOString(),
   };
@@ -50,20 +86,15 @@ function getLocalProductos(): Producto[] {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) {
       const parsed: any[] = JSON.parse(saved);
-      return deduplicateById(
-        parsed
-          .map((p, i) => normalizeProducto(p.id || `local-${i}`, p))
-          .filter((p) => !deletedIds.has(p.id!))
-      );
+      const filtered = parsed
+        .map((p, i) => normalizeProducto(p.id || `local-${i}`, p))
+        .filter((p) => !deletedIds.has(p.id!) && !isMockProduct(p.id, p.nombre));
+      return deduplicateById(filtered);
     }
   } catch (e) {
     console.warn('LocalStorage error:', e);
   }
-  return deduplicateById(
-    INITIAL_PRODUCTOS
-      .map((p, i) => normalizeProducto(p.id || `init-${i}`, p))
-      .filter((p) => !deletedIds.has(p.id!))
-  );
+  return [];
 }
 
 function saveLocalProductos(items: Producto[]) {
@@ -94,12 +125,24 @@ export const productosService = {
           colRef,
           (snapshot) => {
             if (snapshot.empty) {
-              callback(getLocalProductos());
+              // Cloud collection is completely empty: keep catalog empty
+              saveLocalProductos([]);
+              callback([]);
               return;
             }
             const list: Producto[] = [];
             snapshot.forEach((docSnap) => {
-              list.push(normalizeProducto(docSnap.id, docSnap.data()));
+              const data = docSnap.data();
+              const id = docSnap.id;
+              const nombre = data.nombre || data.name || '';
+              // Purge any legacy mock product from Firestore if it ever existed
+              if (isMockProduct(id, nombre)) {
+                try {
+                  deleteDoc(doc(db!, 'productos', id));
+                } catch (_) {}
+                return;
+              }
+              list.push(normalizeProducto(id, data));
             });
             const uniqueList = deduplicateById(list);
             saveLocalProductos(uniqueList);
@@ -129,12 +172,18 @@ export const productosService = {
         if (!snap.empty) {
           const list: Producto[] = [];
           snap.forEach((docSnap) => {
-            const prod = normalizeProducto(docSnap.id, docSnap.data());
+            const data = docSnap.data();
+            const id = docSnap.id;
+            const nombre = data.nombre || data.name || '';
+            if (isMockProduct(id, nombre)) return;
+            const prod = normalizeProducto(id, data);
             if (prod.disponible !== false && prod.activo !== false) {
               list.push(prod);
             }
           });
           return deduplicateById(list);
+        } else {
+          return [];
         }
       } catch (error) {
         console.warn('Error fetching activos from Firebase, using local fallback:', error);
@@ -152,9 +201,15 @@ export const productosService = {
         if (!snap.empty) {
           const list: Producto[] = [];
           snap.forEach((docSnap) => {
-            list.push(normalizeProducto(docSnap.id, docSnap.data()));
+            const data = docSnap.data();
+            const id = docSnap.id;
+            const nombre = data.nombre || data.name || '';
+            if (isMockProduct(id, nombre)) return;
+            list.push(normalizeProducto(id, data));
           });
           return deduplicateById(list);
+        } else {
+          return [];
         }
       } catch (error) {
         console.warn('Error fetching all productos from Firebase, using fallback:', error);
@@ -168,14 +223,15 @@ export const productosService = {
     const isDisp = producto.disponible !== undefined ? Boolean(producto.disponible) : (producto.activo !== undefined ? Boolean(producto.activo) : true);
     const docPayload = {
       nombre: producto.nombre.trim(),
-      descripcion: producto.descripcion.trim(),
+      descripcion: producto.descripcion ? producto.descripcion.trim() : '',
       precio: Number(producto.precio) || 0,
-      categoria: producto.categoria.trim() || 'Helados',
-      imagen: producto.imagen.trim(),
+      costo: producto.costo !== undefined ? Number(producto.costo) : 0,
+      categoria: producto.categoria?.trim() || 'Helados & Bolis',
+      imagen: producto.imagen?.trim() || 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=600&q=80',
       disponible: isDisp,
       activo: isDisp,
-      stock: producto.stock !== undefined ? Number(producto.stock) : 99,
-      stockMinimo: producto.stockMinimo !== undefined ? Number(producto.stockMinimo) : 5,
+      stock: producto.stock !== undefined ? Number(producto.stock) : 0,
+      stockMinimo: producto.stockMinimo !== undefined ? Number(producto.stockMinimo) : 0,
       createdAt: producto.createdAt || now,
       updatedAt: now,
     };
@@ -190,11 +246,11 @@ export const productosService = {
         saveLocalProductos(list);
         return created;
       } catch (error: any) {
-        console.warn('Aviso: Producto guardado en almacenamiento local (Firestore usando fallback):', error?.message || error);
+        console.warn('Aviso: Error guardando en Firebase Firestore, usando respaldo local:', error?.message || error);
       }
     }
 
-    // LocalStorage
+    // LocalStorage fallback
     const list = getLocalProductos();
     const newProd: Producto = {
       id: 'prod-' + Date.now(),
@@ -289,12 +345,12 @@ export const productosService = {
       nombre: `${producto.nombre} (Copia)`,
       descripcion: producto.descripcion || '',
       precio: Number(producto.precio) || 0,
-      categoria: producto.categoria || 'Helados',
+      categoria: producto.categoria || 'Helados & Bolis',
       imagen: producto.imagen || '',
       disponible: producto.disponible !== undefined ? producto.disponible : true,
       activo: producto.activo !== undefined ? producto.activo : true,
-      stock: producto.stock !== undefined ? Number(producto.stock) : 99,
-      stockMinimo: producto.stockMinimo !== undefined ? Number(producto.stockMinimo) : 5,
+      stock: producto.stock !== undefined ? Number(producto.stock) : 0,
+      stockMinimo: producto.stockMinimo !== undefined ? Number(producto.stockMinimo) : 0,
     };
     return this.createProducto(copyData);
   },
@@ -308,9 +364,7 @@ export const productosService = {
     const all = await this.getAllProductos();
     return all.find((p) => p.id === id) || null;
   },
-  recargarProductosEjemplo(): Producto[] {
-    const list = INITIAL_PRODUCTOS.map((p, i) => normalizeProducto(p.id || `init-${i}`, p));
-    saveLocalProductos(list);
-    return list;
+  limpiarTodosLosProductos(): void {
+    saveLocalProductos([]);
   },
 };

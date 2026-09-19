@@ -60,12 +60,12 @@ export const ProductosView: React.FC<ProductosViewProps> = ({
       nombre: '',
       descripcion: '',
       precio: 0,
-      categoria: categorias[0]?.nombre || 'Bolis Gourmet',
-      stock: 10,
-      stockMinimo: 5,
+      categoria: categorias[0]?.nombre || 'Helados & Bolis',
+      stock: 0,
+      stockMinimo: 0,
       disponible: true,
       destacado: false,
-      imagen: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=600&q=80',
+      imagen: '',
     });
     setIsModalOpen(true);
   };
@@ -208,8 +208,30 @@ export const ProductosView: React.FC<ProductosViewProps> = ({
             <tbody className="divide-y divide-stone-100">
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-stone-400">
-                    No se encontraron productos.
+                  <td colSpan={6} className="p-12 text-center">
+                    <div className="max-w-md mx-auto space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center mx-auto">
+                        <Plus className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-serif font-bold text-base text-stone-900">
+                        {productos.length === 0 ? 'Catálogo completamente vacío' : 'No se encontraron productos'}
+                      </h4>
+                      <p className="text-xs text-stone-500 leading-relaxed">
+                        {productos.length === 0
+                          ? 'Aún no has registrado ningún producto. Empieza desde cero creando tu primer producto artesanal. Se guardará en Firebase Firestore y se sincronizará en la web para todos tus dispositivos.'
+                          : 'No hay productos que coincidan con los filtros o término de búsqueda.'}
+                      </p>
+                      {productos.length === 0 && (
+                        <button
+                          type="button"
+                          onClick={handleOpenNew}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-900 hover:bg-amber-800 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span>Crear mi primer producto</span>
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ) : (

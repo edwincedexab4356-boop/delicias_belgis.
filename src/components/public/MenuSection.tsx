@@ -77,37 +77,39 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
           </p>
         </div>
 
-        {/* Filters & Search */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          {/* Category Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            {categories.map((cat, idx) => (
-              <button
-                key={`${cat}-${idx}`}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                  selectedCategory === cat
-                    ? 'bg-amber-900 text-amber-50 shadow-sm'
-                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+        {/* Filters & Search - only when products exist */}
+        {productos.length > 0 && (
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            {/* Category Chips */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+              {categories.map((cat, idx) => (
+                <button
+                  key={`${cat}-${idx}`}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                    selectedCategory === cat
+                      ? 'bg-amber-900 text-amber-50 shadow-sm'
+                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-          {/* Search Box */}
-          <div className="relative min-w-[260px]">
-            <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Buscar boli, tarta, helado..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-800/30 focus:border-amber-800 transition-all"
-            />
+            {/* Search Box */}
+            <div className="relative min-w-[260px]">
+              <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Buscar boli, tarta, helado..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-800/30 focus:border-amber-800 transition-all"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Quick Alert when product is added */}
         {lastAddedName && (
@@ -145,23 +147,29 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
 
         {/* Empty State */}
         {!loading && filteredProductos.length === 0 && (
-          <div className="text-center py-16 px-4 rounded-2xl bg-stone-50 border border-stone-200 max-w-md mx-auto">
-            <AlertCircle className="w-10 h-10 text-stone-400 mx-auto mb-3" />
-            <h3 className="font-serif text-lg font-bold text-stone-800">
-              No encontramos productos
+          <div className="text-center py-16 px-6 rounded-3xl bg-amber-50/50 border border-amber-900/10 max-w-md mx-auto space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center mx-auto">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-stone-900">
+              {productos.length === 0 ? 'Menú en Preparación' : 'No encontramos productos'}
             </h3>
-            <p className="text-xs text-stone-500 mt-1">
-              No hay productos que coincidan con la búsqueda o categoría seleccionada.
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              {productos.length === 0
+                ? 'Estamos preparando nuevas recetas y postres artesanales. Próximamente podrás consultar la carta completa y hacer tus pedidos directamente por WhatsApp.'
+                : 'No hay productos que coincidan con la búsqueda o categoría seleccionada.'}
             </p>
-            <button
-              onClick={() => {
-                setSelectedCategory('Todas');
-                setSearchQuery('');
-              }}
-              className="mt-4 px-4 py-2 rounded-xl text-xs font-semibold bg-amber-900 text-white hover:bg-amber-800"
-            >
-              Restablecer filtros
-            </button>
+            {productos.length > 0 && (
+              <button
+                onClick={() => {
+                  setSelectedCategory('Todas');
+                  setSearchQuery('');
+                }}
+                className="mt-2 px-4 py-2 rounded-xl text-xs font-semibold bg-amber-900 text-white hover:bg-amber-800 cursor-pointer"
+              >
+                Restablecer filtros
+              </button>
+            )}
           </div>
         )}
 
