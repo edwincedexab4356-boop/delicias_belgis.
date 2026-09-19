@@ -171,7 +171,7 @@ export const CategoriasView: React.FC<CategoriasViewProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="Ej. Bolis Gourmet, Helados, Repostería..."
+                  placeholder="Ej. Dulcería, Repostería, Postres Especiales..."
                   value={editingCat.nombre || ''}
                   onChange={(e) => setEditingCat({ ...editingCat, nombre: e.target.value })}
                   className="w-full px-3 py-2 text-xs rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"

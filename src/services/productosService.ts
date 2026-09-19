@@ -18,6 +18,7 @@ const LEGACY_MOCK_TITLES = new Set([
   'Tarta Húmeda de Tres Leches Belgi',
   'Caja de Alfajores Artesanales (6 uds)',
   'Brownie Fudge con Nuez y Helado',
+  'Brownie Fudge con Nuez',
   'Tarta de Chocolate Belga 70%',
   'Paleta Artesanal de Pistacho & Frambuesa',
 ]);
@@ -26,7 +27,14 @@ function isMockProduct(id?: string, nombre?: string): boolean {
   if (!id) return false;
   if (LEGACY_MOCK_IDS.has(id)) return true;
   if (id.startsWith('init-')) return true;
-  if (nombre && LEGACY_MOCK_TITLES.has(nombre.trim())) return true;
+  if (nombre) {
+    const trimmed = nombre.trim();
+    if (LEGACY_MOCK_TITLES.has(trimmed)) return true;
+    const lower = trimmed.toLowerCase();
+    if (lower.includes('helado') || lower.includes('heladeria') || lower.includes('heladería') || lower.includes('ice cream')) {
+      return true;
+    }
+  }
   return false;
 }
 
@@ -69,7 +77,7 @@ function normalizeProducto(id: string, data: any): Producto {
     descripcion: data.descripcion || data.description || '',
     precio: Number(data.precio || data.price || 0),
     costo: data.costo !== undefined ? Number(data.costo) : 0,
-    categoria: data.categoria || data.category || 'Helados & Bolis',
+    categoria: data.categoria || data.category || 'Dulcería',
     imagen: data.imagen || data.image || 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&q=80&w=800',
     disponible: isDisp,
     activo: isDisp,
@@ -226,7 +234,7 @@ export const productosService = {
       descripcion: producto.descripcion ? producto.descripcion.trim() : '',
       precio: Number(producto.precio) || 0,
       costo: producto.costo !== undefined ? Number(producto.costo) : 0,
-      categoria: producto.categoria?.trim() || 'Helados & Bolis',
+      categoria: producto.categoria?.trim() || 'Dulcería',
       imagen: producto.imagen?.trim() || 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=600&q=80',
       disponible: isDisp,
       activo: isDisp,
@@ -345,7 +353,7 @@ export const productosService = {
       nombre: `${producto.nombre} (Copia)`,
       descripcion: producto.descripcion || '',
       precio: Number(producto.precio) || 0,
-      categoria: producto.categoria || 'Helados & Bolis',
+      categoria: producto.categoria || 'Dulcería',
       imagen: producto.imagen || '',
       disponible: producto.disponible !== undefined ? producto.disponible : true,
       activo: producto.activo !== undefined ? producto.activo : true,

@@ -14,9 +14,9 @@ import { deduplicateById } from '../utils/deduplicate';
 const LOCAL_STORAGE_KEY = 'delicias_belgi_categorias';
 
 const INITIAL_CATEGORIAS: Categoria[] = [
-  { id: 'cat-1', nombre: 'Helados & Bolis', descripcion: 'Helados artesanales y bolis gourmet', activa: true, orden: 1 },
+  { id: 'cat-1', nombre: 'Dulcería', descripcion: 'Alfajores, brownies y bocadillos dulces', activa: true, orden: 1 },
   { id: 'cat-2', nombre: 'Repostería', descripcion: 'Tartas, cheesecakes y pasteles finos', activa: true, orden: 2 },
-  { id: 'cat-3', nombre: 'Dulcería', descripcion: 'Alfajores, brownies y bocadillos dulces', activa: true, orden: 3 },
+  { id: 'cat-3', nombre: 'Postres Especiales', descripcion: 'Creaciones artesanales de la casa', activa: true, orden: 3 },
   { id: 'cat-4', nombre: 'Bebidas', descripcion: 'Café, sodas y jugos naturales', activa: true, orden: 4 },
   { id: 'cat-5', nombre: 'Combos & Especiales', descripcion: 'Paquetes para compartir y creaciones de temporada', activa: true, orden: 5 },
 ];

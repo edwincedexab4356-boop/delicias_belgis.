@@ -36,7 +36,7 @@ export const ProduccionView: React.FC<ProduccionViewProps> = ({
   const [cantidad, setCantidad] = useState<number>(12);
   const [tipoOperacion, setTipoOperacion] = useState<'produccion' | 'baja'>('produccion');
   const [lote, setLote] = useState<string>(() => `LOTE-${new Date().toISOString().slice(2, 10).replace(/-/g, '')}`);
-  const [responsable, setResponsable] = useState<string>(user.displayName || user.email || 'Maestro Heladero');
+  const [responsable, setResponsable] = useState<string>(user.displayName || user.email || 'Maestro Repostero');
   const [observaciones, setObservaciones] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -477,7 +477,7 @@ export const ProduccionView: React.FC<ProduccionViewProps> = ({
                 </label>
                 <input
                   type="text"
-                  placeholder="Nombre del maestro heladero o repostero"
+                  placeholder="Nombre del maestro repostero o encargado"
                   value={responsable}
                   onChange={(e) => setResponsable(e.target.value)}
                   className="w-full px-3 py-2 text-xs rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"

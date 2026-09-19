@@ -28,16 +28,26 @@ function saveLocalConfig(config: ConfiguracionNegocio) {
 
 export const configuracionService = {
   subscribeToConfig(callback: (config: ConfiguracionNegocio) => void): () => void {
+    // 1. Emit local config immediately
+    callback(getLocalConfig());
+
+    // 2. Always listen to local custom events for instant optimistic feedback
+    const handler = () => callback(getLocalConfig());
+    window.addEventListener('delicias_config_changed', handler);
+
+    let unsubFirestore: (() => void) | null = null;
     if (isFirebaseConfigured() && db) {
       try {
         const docRef = doc(db, 'configuracion', 'negocio');
-        return onSnapshot(
+        unsubFirestore = onSnapshot(
           docRef,
           (docSnap) => {
             if (docSnap.exists()) {
-              callback(docSnap.data() as ConfiguracionNegocio);
+              const data = docSnap.data() as ConfiguracionNegocio;
+              saveLocalConfig(data);
+              callback(data);
             } else {
-              callback(INITIAL_CONFIGURACION);
+              callback(getLocalConfig());
             }
           },
           (error) => {
@@ -49,10 +59,11 @@ export const configuracionService = {
         console.warn('Error setting up onSnapshot for configuracion:', err);
       }
     }
-    callback(getLocalConfig());
-    const handler = () => callback(getLocalConfig());
-    window.addEventListener('delicias_config_changed', handler);
-    return () => window.removeEventListener('delicias_config_changed', handler);
+
+    return () => {
+      window.removeEventListener('delicias_config_changed', handler);
+      if (unsubFirestore) unsubFirestore();
+    };
   },
 
   async getConfiguracion(): Promise<ConfiguracionNegocio> {

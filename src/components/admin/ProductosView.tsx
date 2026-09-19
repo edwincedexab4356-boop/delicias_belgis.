@@ -60,7 +60,7 @@ export const ProductosView: React.FC<ProductosViewProps> = ({
       nombre: '',
       descripcion: '',
       precio: 0,
-      categoria: categorias[0]?.nombre || 'Helados & Bolis',
+      categoria: categorias[0]?.nombre || 'Dulcería',
       stock: 0,
       stockMinimo: 0,
       disponible: true,
@@ -346,7 +346,7 @@ export const ProductosView: React.FC<ProductosViewProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="Ej. Boli Gourmet Chocolate Belga"
+                  placeholder="Ej. Alfajor Artesanal de Chocolate"
                   value={editingProducto.nombre || ''}
                   onChange={(e) => setEditingProducto({ ...editingProducto, nombre: e.target.value })}
                   className="w-full px-3 py-2 text-xs rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-900/20"
@@ -388,7 +388,7 @@ export const ProductosView: React.FC<ProductosViewProps> = ({
                     Categoría *
                   </label>
                   <select
-                    value={editingProducto.categoria || 'Bolis Gourmet'}
+                    value={editingProducto.categoria || 'Dulcería'}
                     onChange={(e) => setEditingProducto({ ...editingProducto, categoria: e.target.value })}
                     className="w-full px-3 py-2 text-xs rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-900/20"
                   >

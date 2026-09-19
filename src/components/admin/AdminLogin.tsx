@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Mail, ArrowLeft, IceCream, AlertCircle, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, ArrowLeft, Cake, AlertCircle, ShieldCheck } from 'lucide-react';
 import { authService } from '../../services/authService';
 import { isFirebaseConfigured } from '../../services/firebase';
 import { UserAuth } from '../../types';
@@ -47,13 +47,13 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
         {/* Brand header */}
         <div className="text-center">
           <div className="w-16 h-16 rounded-2xl bg-amber-900 text-amber-100 flex items-center justify-center mx-auto shadow-lg shadow-amber-950/20 mb-3">
-            <IceCream className="w-8 h-8" />
+            <Cake className="w-8 h-8" />
           </div>
           <h2 className="font-serif text-3xl font-bold text-stone-900 tracking-tight">
             Panel Administrativo
           </h2>
           <p className="mt-1 text-sm text-stone-600">
-            Delicias Belgi — Acceso Seguro
+            Delicias Belgi — Dulcería & Repostería
           </p>
         </div>
       </div>

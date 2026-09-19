@@ -222,7 +222,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         if (v.anulada) return;
         if (v.items && v.items.length > 0) {
           v.items.forEach((it) => {
-            const cat = it.categoria || 'Helados';
+            const cat = it.categoria || 'Dulcería';
             catMap[cat] = (catMap[cat] || 0) + it.subtotal;
           });
         } else {

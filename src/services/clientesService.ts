@@ -34,10 +34,18 @@ function saveLocalClientes(items: Cliente[]) {
 
 export const clientesService = {
   subscribeToClientes(callback: (items: Cliente[]) => void): () => void {
+    // 1. Emit local clients immediately
+    callback(getLocalClientes());
+
+    // 2. Always listen to local events for instant optimistic feedback
+    const handler = () => callback(getLocalClientes());
+    window.addEventListener('delicias_clientes_changed', handler);
+
+    let unsubFirestore: (() => void) | null = null;
     if (isFirebaseConfigured() && db) {
       try {
         const colRef = collection(db, 'clientes');
-        return onSnapshot(
+        unsubFirestore = onSnapshot(
           colRef,
           (snapshot) => {
             const list: Cliente[] = [];
@@ -58,10 +66,11 @@ export const clientesService = {
             });
             // Sort by highest spend
             list.sort((a, b) => (b.totalGastado || 0) - (a.totalGastado || 0));
+            saveLocalClientes(list);
             callback(list);
           },
           (error) => {
-            console.warn('Error onSnapshot clientes, using fallback:', error);
+            console.warn('Firestore snapshot error on clientes, using fallback:', error);
             callback(getLocalClientes());
           }
         );
@@ -69,10 +78,11 @@ export const clientesService = {
         console.warn('Error setting up onSnapshot for clientes:', err);
       }
     }
-    callback(getLocalClientes());
-    const handler = () => callback(getLocalClientes());
-    window.addEventListener('delicias_clientes_changed', handler);
-    return () => window.removeEventListener('delicias_clientes_changed', handler);
+
+    return () => {
+      window.removeEventListener('delicias_clientes_changed', handler);
+      if (unsubFirestore) unsubFirestore();
+    };
   },
 
   async getClientes(): Promise<Cliente[]> {

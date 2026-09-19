@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, Lock, IceCream, MessageCircle, Menu, X } from 'lucide-react';
+import { ShoppingBag, Lock, Cake, MessageCircle, Menu, X } from 'lucide-react';
 import { ConfiguracionNegocio } from '../../types';
 import { cleanWhatsAppNumber } from '../../utils/formatters';
 
@@ -45,7 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               />
             ) : (
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 via-amber-700 to-amber-900 flex items-center justify-center text-amber-50 shadow-md shadow-amber-900/20 group-hover:scale-105 transition-transform">
-                <IceCream className="w-6 h-6 text-amber-100" />
+                <Cake className="w-6 h-6 text-amber-100" />
               </div>
             )}
             <div>
@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {config.nombre || 'Delicias Belgi'}
               </span>
               <span className="text-xs font-semibold uppercase tracking-widest text-amber-700 block">
-                Heladería & Repostería
+                Dulcería & Repostería
               </span>
             </div>
           </div>

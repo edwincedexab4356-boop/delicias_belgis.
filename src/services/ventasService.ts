@@ -207,10 +207,18 @@ function normalizeVenta(id: string, data: any): Venta {
 
 export const ventasService = {
   subscribeToVentas(callback: (items: Venta[]) => void): () => void {
+    // 1. Emit local data immediately
+    callback(getLocalVentas());
+
+    // 2. Always listen to local custom events for instant optimistic feedback
+    const handler = () => callback(getLocalVentas());
+    window.addEventListener('delicias_ventas_changed', handler);
+
+    let unsubFirestore: (() => void) | null = null;
     if (isFirebaseConfigured() && db) {
       try {
         const colRef = collection(db, 'ventas');
-        return onSnapshot(
+        unsubFirestore = onSnapshot(
           colRef,
           (snapshot) => {
             const deletedIds = getDeletedVentasIds();
@@ -234,10 +242,11 @@ export const ventasService = {
         console.warn('Error setting up onSnapshot for ventas:', err);
       }
     }
-    callback(getLocalVentas());
-    const handler = () => callback(getLocalVentas());
-    window.addEventListener('delicias_ventas_changed', handler);
-    return () => window.removeEventListener('delicias_ventas_changed', handler);
+
+    return () => {
+      window.removeEventListener('delicias_ventas_changed', handler);
+      if (unsubFirestore) unsubFirestore();
+    };
   },
 
   async getVentas(): Promise<Venta[]> {

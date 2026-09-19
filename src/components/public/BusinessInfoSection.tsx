@@ -43,7 +43,7 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({ config
                     config.historiaImagen3 ||
                     'https://images.unsplash.com/photo-1505394033641-40c6ad1178d7?auto=format&fit=crop&w=500&q=80'
                   }
-                  alt="Bolis y helados frutales"
+                  alt="Dulcería y postres artesanales"
                   className="w-full h-40 sm:h-52 object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -74,7 +74,7 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({ config
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
               {config.presentacionTexto || (
                 <>
-                  En <strong className="font-semibold text-amber-950">{config.nombre || 'Delicias Belgi'}</strong> nos apasiona crear momentos dulces inolvidables. Nacimos con la visión de rescatar el sabor tradicional de los bolis y helados caseros, elevándolos con técnicas reposteras refinadas y chocolate puro.
+                  Somos una <strong className="font-semibold text-amber-950">dulcería y repostería artesanal</strong> en Colón. Elaboramos postres con recetas únicas, ingredientes frescos y entrega rápida a domicilio.
                 </>
               )}
             </p>
@@ -106,7 +106,7 @@ export const BusinessInfoSection: React.FC<BusinessInfoSectionProps> = ({ config
               </div>
               <div>
                 <h4 className="font-serif font-bold text-stone-900 text-sm">
-                  Maestría Repostera & Heladera
+                  Maestría en Dulcería & Repostería
                 </h4>
                 <p className="text-xs text-stone-500">
                   Cada receta ha sido probada y perfeccionada para brindarte una textura y sabor excepcionales.

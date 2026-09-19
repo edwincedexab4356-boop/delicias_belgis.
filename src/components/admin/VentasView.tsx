@@ -979,7 +979,7 @@ export const VentasView: React.FC<VentasViewProps> = ({
 
             <div className="text-center py-2 border-b border-dashed border-stone-200">
               <h4 className="font-serif font-bold text-stone-900 text-base">Delicias Belgi</h4>
-              <p className="text-[11px] text-stone-500">Heladería y Repostería Artesanal</p>
+              <p className="text-[11px] text-stone-500">Dulcería y Repostería Artesanal</p>
               <p className="text-[10px] text-stone-400">Calle 2 ave. Bolívar, PH Bahía Limón, Colón</p>
               <p className="text-[10px] text-stone-400 mt-1">Ticket #{selectedVentaTicket.id?.slice(-8)}</p>
               <p className="text-[10px] text-stone-400">

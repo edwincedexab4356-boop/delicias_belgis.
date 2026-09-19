@@ -63,7 +63,7 @@ function normalizeProduccion(id: string, data: any): ProduccionRegistro {
     cantidad,
     fecha: data.fecha || data.createdAt || new Date().toISOString(),
     usuario: String(data.usuario || data.responsable || data.usuarioEmail || 'Administrador'),
-    responsable: String(data.responsable || data.usuario || 'Maestro Heladero'),
+    responsable: String(data.responsable || data.usuario || 'Maestro Repostero'),
     observacion: data.observacion ? String(data.observacion) : (data.notas ? String(data.notas) : ''),
     notas: data.notas ? String(data.notas) : (data.observacion ? String(data.observacion) : ''),
     costo: costoUnitario,

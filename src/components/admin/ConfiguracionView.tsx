@@ -252,7 +252,7 @@ export const ConfiguracionView: React.FC<ConfiguracionViewProps> = ({
 
               <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/80">
                 <ImageUploadInput
-                  label="Foto 3 (Bolis / Helados)"
+                  label="Foto 3 (Dulcería / Postres)"
                   value={
                     formData.historiaImagen3 !== undefined
                       ? formData.historiaImagen3

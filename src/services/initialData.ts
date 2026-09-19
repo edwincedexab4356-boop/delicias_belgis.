@@ -2,7 +2,7 @@ import { Producto, ConfiguracionNegocio, InventarioItem, Venta, Gasto, Produccio
 
 export const INITIAL_CONFIGURACION: ConfiguracionNegocio = {
   nombre: 'Delicias Belgi',
-  descripcion: 'Heladería, dulcería y repostería artesanal en Ciudad de Colón.',
+  descripcion: 'Dulcería y repostería artesanal en Ciudad de Colón.',
   telefono: '6797-9141',
   direccion: 'Ciudad de Colón, Calle 2 ave. Bolívar, PH Bahía Limón',
   whatsapp: '50767979141',
@@ -23,8 +23,8 @@ export const INITIAL_CONFIGURACION: ConfiguracionNegocio = {
   logoUrl: '',
   heroImagen: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=800&q=85',
   heroTitulo: 'El sabor artesanal que alegra tus mejores momentos',
-  heroSubtitulo: 'En Delicias Belgi creamos bolis gourmet, helados cremosos, postres y dulcería preparada con amor e ingredientes de primera calidad en Ciudad de Colón.',
-  presentacionTexto: 'Somos una heladería, dulcería y repostería artesanal en Colón. Elaboramos postres con recetas únicas, ingredientes frescos y entrega rápida a domicilio.',
+  heroSubtitulo: 'En Delicias Belgi creamos postres exquisitos, tartas artesanales y dulcería preparada con amor e ingredientes de primera calidad en Ciudad de Colón.',
+  presentacionTexto: 'Somos una dulcería y repostería artesanal en Colón. Elaboramos postres con recetas únicas, ingredientes frescos y entrega rápida a domicilio.',
   contactoTexto: 'Visítanos en PH Bahía Limón o solicita tus postres favoritos para llevar y con entrega a domicilio.',
   whatsappMensajeInicial: '¡Hola Delicias Belgi! Me gustaría hacer un pedido:',
   actualizadoEn: new Date().toISOString(),

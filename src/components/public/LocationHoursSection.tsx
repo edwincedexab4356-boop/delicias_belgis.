@@ -141,7 +141,7 @@ export const LocationHoursSection: React.FC<LocationHoursSectionProps> = ({ conf
                 Contacto Directo
               </h3>
               <p className="text-xs text-stone-300 leading-relaxed mb-4">
-                {config.descripcion || 'Heladería, dulcería y repostería artesanal en Colón. Contáctanos para pedidos especiales.'}
+                {config.descripcion || 'Dulcería y repostería artesanal en Colón. Contáctanos para pedidos especiales.'}
               </p>
               <div className="space-y-2 text-xs">
                 <div className="flex items-center gap-2">

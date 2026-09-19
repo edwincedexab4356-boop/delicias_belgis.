@@ -1,5 +1,5 @@
 import React from 'react';
-import { IceCream, Lock, MessageCircle, Instagram, MapPin } from 'lucide-react';
+import { Cake, Lock, MessageCircle, Instagram, MapPin } from 'lucide-react';
 import { ConfiguracionNegocio } from '../../types';
 import { cleanWhatsAppNumber } from '../../utils/formatters';
 
@@ -21,7 +21,7 @@ export const Footer: React.FC<FooterProps> = ({ config, onGoToAdmin }) => {
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-600 flex items-center justify-center text-white">
-                <IceCream className="w-5 h-5" />
+                <Cake className="w-5 h-5" />
               </div>
               <span className="font-serif text-2xl font-bold text-white tracking-tight">
                 {config.nombre || 'Delicias Belgi'}
@@ -29,7 +29,7 @@ export const Footer: React.FC<FooterProps> = ({ config, onGoToAdmin }) => {
             </div>
             <p className="text-xs text-stone-400 max-w-sm leading-relaxed">
               {config.descripcion ||
-                'Heladería, dulcería y repostería artesanal en Ciudad de Colón. Bolis gourmet, postres finos y repostería horneada diariamente con pasión.'}
+                'Dulcería y repostería artesanal en Ciudad de Colón. Postres finos, tartas y repostería horneada diariamente con pasión.'}
             </p>
             <div className="flex items-center gap-2 text-xs text-stone-400">
               <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />

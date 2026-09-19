@@ -118,12 +118,20 @@ export const pedidosService = {
    * Real-time listener for orders. Updates automatically via onSnapshot without refreshing the page.
    */
   subscribeToPedidos(callback: (pedidos: Pedido[]) => void): () => void {
+    // 1. Emit local orders immediately
+    callback(getLocalPedidos());
+
+    // 2. Always listen to local events for instant optimistic feedback
+    const handler = () => callback(getLocalPedidos());
+    window.addEventListener('delicias_pedidos_changed', handler);
+
+    let unsubFirestore: (() => void) | null = null;
     if (isFirebaseConfigured() && db) {
       const firestoreDb = db;
       try {
         // Listen to primary 'orders' collection
         const ordersCol = collection(firestoreDb, 'orders');
-        return onSnapshot(
+        unsubFirestore = onSnapshot(
           ordersCol,
           (snapshot) => {
             const list: Pedido[] = [];
@@ -141,11 +149,12 @@ export const pedidosService = {
                     legacyList.push(normalizePedido(docSnap.id, docSnap.data()));
                   });
                   legacyList.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+                  saveLocalPedidos(legacyList);
                   callback(legacyList);
                   return;
                 }
-                callback(list);
-              }).catch(() => callback(list));
+                callback(getLocalPedidos());
+              }).catch(() => callback(getLocalPedidos()));
               return;
             }
 
@@ -155,22 +164,12 @@ export const pedidosService = {
               const timeB = new Date(b.createdAt || 0).getTime();
               return timeB - timeA;
             });
+            saveLocalPedidos(list);
             callback(list);
           },
           (error) => {
-            console.warn('Firestore snapshot error on orders, listening to pedidos or local fallback:', error);
-            // Fallback to legacy 'pedidos' listener
-            try {
-              const pedidosCol = collection(firestoreDb, 'pedidos');
-              onSnapshot(pedidosCol, (snap) => {
-                const legacyList: Pedido[] = [];
-                snap.forEach((d) => legacyList.push(normalizePedido(d.id, d.data())));
-                legacyList.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
-                callback(legacyList);
-              }, () => callback(getLocalPedidos()));
-            } catch {
-              callback(getLocalPedidos());
-            }
+            console.warn('Firestore snapshot error on orders, using local fallback:', error);
+            callback(getLocalPedidos());
           }
         );
       } catch (err) {
@@ -178,11 +177,10 @@ export const pedidosService = {
       }
     }
 
-    // Local fallback
-    callback(getLocalPedidos());
-    const handler = () => callback(getLocalPedidos());
-    window.addEventListener('delicias_pedidos_changed', handler);
-    return () => window.removeEventListener('delicias_pedidos_changed', handler);
+    return () => {
+      window.removeEventListener('delicias_pedidos_changed', handler);
+      if (unsubFirestore) unsubFirestore();
+    };
   },
 
   async getPedidos(): Promise<Pedido[]> {

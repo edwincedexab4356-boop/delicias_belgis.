@@ -12,7 +12,7 @@ import {
   ExternalLink,
   Menu,
   X,
-  IceCream,
+  Cake,
   ShieldCheck,
   AlertTriangle,
   UserCheck,
@@ -75,7 +75,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       <div className="md:hidden bg-stone-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-amber-600 flex items-center justify-center text-white">
-            <IceCream className="w-4 h-4" />
+            <Cake className="w-4 h-4" />
           </div>
           <div>
             <span className="font-serif font-bold text-sm tracking-tight block">
@@ -106,7 +106,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           <div className="p-6 border-b border-stone-800/80 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-600 flex items-center justify-center text-amber-50 shadow-md">
-                <IceCream className="w-6 h-6" />
+                <Cake className="w-6 h-6" />
               </div>
               <div>
                 <span className="font-serif text-lg font-bold text-white block leading-tight">

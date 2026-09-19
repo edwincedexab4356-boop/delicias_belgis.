@@ -11,7 +11,7 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({ config, onExploreMenu }) => {
   const waNumber = cleanWhatsAppNumber(config.whatsapp || '50767979141');
   const directWaUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(
-    config.whatsappMensajeInicial || '¡Hola Delicias Belgi! Me gustaría conocer los postres y bolis disponibles hoy.'
+    config.whatsappMensajeInicial || '¡Hola Delicias Belgi! Me gustaría conocer los postres y dulcería disponibles hoy.'
   )}`;
   const heroImg =
     config.heroImagen ||
@@ -30,16 +30,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config, onExploreMenu 
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100/80 border border-amber-300/60 text-amber-900 text-xs font-semibold tracking-wide">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              <span>{config.descripcion || 'Heladería, Dulcería y Repostería Artesanal en Colón'}</span>
+              <span>{config.descripcion || 'Dulcería y Repostería Artesanal en Colón'}</span>
             </div>
 
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold text-stone-900 tracking-tight leading-[1.15]">
-              {config.heroTitulo || 'El sabor artesanal que alegra tus mejores momentos.'}
+              {config.heroTitulo || 'El sabor artesanal que alegra tus mejores momentos'}
             </h1>
 
             <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
               {config.heroSubtitulo ||
-                'En Delicias Belgi creamos bolis gourmet, helados cremosos, cheesecakes irresistibles y postres elaborados diariamente con ingredientes de primera calidad en Ciudad de Colón.'}
+                'En Delicias Belgi creamos postres exquisitos, tartas artesanales y dulcería preparada con amor e ingredientes de primera calidad en Ciudad de Colón.'}
             </p>
 
             {/* Service Badges */}
@@ -118,7 +118,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config, onExploreMenu 
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/80 bg-stone-100">
                 <img
                   src={heroImg}
-                  alt={`Postres y helados artesanales ${config.nombre || 'Delicias Belgi'}`}
+                  alt={`Postres y repostería artesanal ${config.nombre || 'Delicias Belgi'}`}
                   className="w-full h-80 sm:h-96 object-cover hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -129,7 +129,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config, onExploreMenu 
                         Especialidad de la casa
                       </span>
                       <h4 className="font-serif text-base font-bold text-stone-900">
-                        Bolis Gourmet & Repostería Belga
+                        Dulcería Fina & Repostería Artesanal
                       </h4>
                     </div>
                     <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900">
